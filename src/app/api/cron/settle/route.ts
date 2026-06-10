@@ -71,14 +71,14 @@ async function settle() {
 }
 
 export async function GET(req: Request) {
-  if (!isCronAuthorized(req)) {
+  if (!(await isCronAuthorized(req))) {
     return Response.json({ error: "unauthorized" }, { status: 401 });
   }
   return settle();
 }
 
 export async function POST(req: Request) {
-  if (!isCronAuthorized(req)) {
+  if (!(await isCronAuthorized(req))) {
     return Response.json({ error: "unauthorized" }, { status: 401 });
   }
   return settle();

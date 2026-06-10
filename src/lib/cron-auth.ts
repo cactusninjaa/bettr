@@ -1,13 +1,26 @@
+import { auth } from "@/auth";
+
 /**
- * Vercel Cron sends an Authorization header with the CRON_SECRET env var.
- * Locally we accept any call (handy for manual triggering).
+ * Authorization for cron-style endpoints.
+ *
+ * Accepts either:
+ *  - `Authorization: Bearer <CRON_SECRET>` (Vercel Cron jobs)
+ *  - A logged-in user session (handy for the admin UI button)
+ *
+ * In dev with no CRON_SECRET set, any request is allowed.
  */
-export function isCronAuthorized(req: Request): boolean {
+export async function isCronAuthorized(req: Request): Promise<boolean> {
   const secret = process.env.CRON_SECRET;
-  if (!secret) {
-    // Dev convenience: no secret = allowed everywhere.
-    return process.env.NODE_ENV !== "production";
+
+  // Vercel cron path
+  if (secret) {
+    const header = req.headers.get("authorization");
+    if (header === `Bearer ${secret}`) return true;
+  } else if (process.env.NODE_ENV !== "production") {
+    return true;
   }
-  const header = req.headers.get("authorization");
-  return header === `Bearer ${secret}`;
+
+  // UI / authenticated user path
+  const session = await auth();
+  return !!session?.user?.id;
 }

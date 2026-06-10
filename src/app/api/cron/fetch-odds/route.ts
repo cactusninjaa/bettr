@@ -75,14 +75,14 @@ export async function GET(req: Request) {
         .map((s) => ({ key: s.key, title: s.title, group: s.group })),
     );
   }
-  if (!isCronAuthorized(req)) {
+  if (!(await isCronAuthorized(req))) {
     return Response.json({ error: "unauthorized" }, { status: 401 });
   }
   return ingest();
 }
 
 export async function POST(req: Request) {
-  if (!isCronAuthorized(req)) {
+  if (!(await isCronAuthorized(req))) {
     return Response.json({ error: "unauthorized" }, { status: 401 });
   }
   return ingest();
