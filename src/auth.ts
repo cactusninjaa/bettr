@@ -26,12 +26,19 @@ if (process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET) {
 export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma as unknown as PrismaClient),
   providers,
-  session: { strategy: "database" },
+  session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
+    async jwt({ token, user }) {
+      // On first login `user` is the DB row created by the adapter.
+      if (user) {
+        token.userId = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user && token.userId) {
+        session.user.id = token.userId as string;
       }
       return session;
     },
