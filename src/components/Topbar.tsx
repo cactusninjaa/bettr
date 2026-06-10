@@ -31,10 +31,10 @@ export async function Topbar() {
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur bg-[color-mix(in_srgb,var(--background)_85%,transparent)] border-b border-[var(--border)]">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
         <Link href="/" className="flex items-center gap-2 shrink-0">
-          <Coin size={28} />
-          <span className="font-black text-lg tracking-tight">Bettr</span>
+          <Coin size={26} />
+          <span className="font-black text-base sm:text-lg tracking-tight">Bettr</span>
         </Link>
         <nav className="hidden md:flex items-center gap-1">
           <Link
@@ -50,8 +50,8 @@ export async function Topbar() {
             Profil
           </Link>
         </nav>
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:block">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <div className="hidden lg:block">
             <XpBar
               level={level}
               xpInLevel={xpInLevel}

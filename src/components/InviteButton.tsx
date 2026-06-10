@@ -45,18 +45,18 @@ export function InviteButton({ groupId }: { groupId: string }) {
   }
 
   return (
-    <div className="card p-5 flex flex-col gap-3">
-      <div className="flex items-center justify-between">
-        <div>
+    <div className="card p-4 sm:p-5 flex flex-col gap-3">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
           <div className="card-section-title">Inviter</div>
-          <h3 className="font-bold mt-1">Partage le lien</h3>
+          <h3 className="font-bold mt-1 text-sm sm:text-base">Partage le lien</h3>
           <p className="text-xs text-[var(--muted)] mt-0.5">
-            Génère un lien d&apos;invitation valable 14 jours.
+            Lien valable 14 jours.
           </p>
         </div>
         {!url && (
           <button onClick={generate} disabled={loading} className="btn-primary shrink-0">
-            {loading ? "…" : "Générer un lien"}
+            {loading ? "…" : "Générer"}
           </button>
         )}
       </div>
@@ -65,11 +65,11 @@ export function InviteButton({ groupId }: { groupId: string }) {
           <input
             readOnly
             value={url}
-            className="input-soft flex-1 font-mono text-xs"
+            className="input-soft flex-1 min-w-0 font-mono text-[11px] sm:text-xs"
             onFocus={(e) => e.currentTarget.select()}
           />
           <button onClick={copyAgain} className="btn-ghost shrink-0">
-            {copied ? "Copié !" : "Copier"}
+            {copied ? "✓" : "Copier"}
           </button>
         </div>
       )}

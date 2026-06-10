@@ -47,14 +47,14 @@ export function GroupList() {
   }
 
   return (
-    <div className="card p-6 flex flex-col gap-4">
-      <div className="flex items-baseline justify-between">
-        <div>
+    <div className="card p-4 sm:p-6 flex flex-col gap-3 sm:gap-4">
+      <div className="flex items-baseline justify-between gap-2">
+        <div className="min-w-0">
           <div className="card-section-title">Communautés</div>
-          <h2 className="text-lg font-bold mt-1">Mes groupes</h2>
+          <h2 className="text-base sm:text-lg font-bold mt-1">Mes groupes</h2>
         </div>
         {!creating && (
-          <button onClick={() => setCreating(true)} className="btn-ghost">
+          <button onClick={() => setCreating(true)} className="btn-ghost shrink-0">
             + Nouveau
           </button>
         )}
@@ -66,10 +66,10 @@ export function GroupList() {
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             placeholder="Nom du groupe…"
-            className="input-soft flex-1"
+            className="input-soft flex-1 min-w-0"
             autoFocus
           />
-          <button type="submit" disabled={!newName.trim()} className="btn-primary">
+          <button type="submit" disabled={!newName.trim()} className="btn-primary shrink-0">
             Créer
           </button>
           <button
@@ -79,7 +79,8 @@ export function GroupList() {
               setNewName("");
               setErr(null);
             }}
-            className="btn-outline"
+            className="btn-outline shrink-0"
+            aria-label="Annuler"
           >
             ✕
           </button>
@@ -97,25 +98,27 @@ export function GroupList() {
             <li key={r.id}>
               <Link
                 href={`/groups/${r.id}`}
-                className="flex items-center gap-3 px-3 py-3 rounded-2xl border border-[var(--border)] hover:border-[var(--border-strong)] transition-colors"
+                className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-3 py-3 rounded-xl sm:rounded-2xl border border-[var(--border)] hover:border-[var(--border-strong)] transition-colors"
               >
                 <div className="flex-1 min-w-0">
-                  <div className="font-semibold truncate flex items-center gap-2">
-                    {r.name}
-                    {r.role === "OWNER" && <span className="chip text-[10px]">Owner</span>}
+                  <div className="font-semibold truncate flex items-center gap-1.5 text-sm sm:text-base">
+                    <span className="truncate">{r.name}</span>
+                    {r.role === "OWNER" && (
+                      <span className="chip text-[9px] sm:text-[10px] shrink-0">Owner</span>
+                    )}
                   </div>
-                  <div className="text-xs text-[var(--muted)] mt-0.5 flex items-center gap-1.5">
+                  <div className="text-[11px] sm:text-xs text-[var(--muted)] mt-0.5 flex items-center gap-1 sm:gap-1.5">
                     <span>{r.memberCount} membres</span>
                     <span>·</span>
-                    <Coin size={12} />
-                    <span>Moi : {r.myPoints.toLocaleString()} pts</span>
+                    <Coin size={11} />
+                    <span className="truncate">Moi : {r.myPoints.toLocaleString()} pts</span>
                   </div>
                 </div>
                 <div className="shrink-0 text-right">
-                  <div className="font-mono font-bold text-[var(--primary)]">
+                  <div className="font-mono font-bold text-[var(--primary)] text-sm sm:text-base">
                     {r.totalPoints.toLocaleString()}
                   </div>
-                  <div className="text-[10px] uppercase tracking-wider text-[var(--muted)]">
+                  <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-[var(--muted)]">
                     cumulés
                   </div>
                 </div>

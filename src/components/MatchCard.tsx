@@ -89,13 +89,13 @@ export function MatchCard({ match, groupId, remainingBudget, existingBet }: Prop
         : "var(--primary)";
 
   return (
-    <div className="card p-5 flex flex-col gap-4">
-      <div className="flex items-start justify-between gap-3">
+    <div className="card p-4 sm:p-5 flex flex-col gap-3 sm:gap-4">
+      <div className="flex items-start justify-between gap-2 sm:gap-3">
         <div className="flex-1 min-w-0">
           <div className="text-[10px] uppercase tracking-wider text-[var(--muted)] font-semibold">
             {time}
           </div>
-          <div className="font-bold text-base mt-1 leading-snug">
+          <div className="font-bold text-sm sm:text-base mt-1 leading-snug">
             <span>{match.homeTeam}</span>
             <span className="text-[var(--muted)] font-normal mx-1.5">vs</span>
             <span>{match.awayTeam}</span>
@@ -103,7 +103,7 @@ export function MatchCard({ match, groupId, remainingBudget, existingBet }: Prop
         </div>
         {existingBet && (
           <span
-            className="chip shrink-0"
+            className="chip shrink-0 text-[10px] sm:text-xs"
             style={{ background: statusBg, color: statusColor }}
           >
             {existingBet.status}
@@ -111,7 +111,7 @@ export function MatchCard({ match, groupId, remainingBudget, existingBet }: Prop
         )}
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
         {(["HOME", "DRAW", "AWAY"] as const).map((c) => {
           const odds =
             c === "HOME" ? match.oddsHome : c === "DRAW" ? match.oddsDraw : match.oddsAway;
@@ -123,7 +123,7 @@ export function MatchCard({ match, groupId, remainingBudget, existingBet }: Prop
               key={c}
               disabled={disabled}
               onClick={() => setChoice(c)}
-              className="px-3 py-3 rounded-2xl text-sm transition-colors"
+              className="px-2 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl text-sm transition-colors"
               style={{
                 background: selected ? "var(--primary)" : "var(--surface-muted)",
                 color: selected ? "white" : "var(--foreground)",
@@ -140,7 +140,7 @@ export function MatchCard({ match, groupId, remainingBudget, existingBet }: Prop
               >
                 {label}
               </div>
-              <div className="font-mono font-bold text-base mt-0.5">
+              <div className="font-mono font-bold text-sm sm:text-base mt-0.5">
                 {odds?.toFixed(2) ?? "—"}
               </div>
             </button>
@@ -149,8 +149,8 @@ export function MatchCard({ match, groupId, remainingBudget, existingBet }: Prop
       </div>
 
       {existingBet ? (
-        <div className="rounded-2xl bg-[var(--surface-muted)] px-4 py-3 text-sm flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
+        <div className="rounded-xl sm:rounded-2xl bg-[var(--surface-muted)] px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
             <span className="text-[var(--muted)]">Pari :</span>
             <span className="font-semibold">{existingBet.choice}</span>
             <span className="text-[var(--muted)]">·</span>
@@ -158,7 +158,7 @@ export function MatchCard({ match, groupId, remainingBudget, existingBet }: Prop
             <span className="font-mono font-semibold">{existingBet.amount}</span>
           </div>
           {existingBet.pointsWon > 0 && (
-            <span className="font-mono font-bold text-[var(--success)] flex items-center gap-1">
+            <span className="font-mono font-bold text-[var(--success)] flex items-center gap-1 shrink-0">
               <Coin size={13} />+{existingBet.pointsWon}
             </span>
           )}
@@ -167,7 +167,7 @@ export function MatchCard({ match, groupId, remainingBudget, existingBet }: Prop
         <div className="text-xs text-[var(--muted)] italic">Match déjà commencé</div>
       ) : (
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 input-soft flex-1">
+          <div className="flex items-center gap-1.5 input-soft flex-1 min-w-0">
             <Coin size={14} />
             <input
               type="number"
@@ -175,13 +175,13 @@ export function MatchCard({ match, groupId, remainingBudget, existingBet }: Prop
               max={remainingBudget}
               value={amount}
               onChange={(e) => setAmount(Math.max(1, parseInt(e.target.value || "0", 10)))}
-              className="bg-transparent outline-none w-full font-mono font-semibold"
+              className="bg-transparent outline-none w-full min-w-0 font-mono font-semibold"
             />
           </div>
           <button
             onClick={submit}
             disabled={!choice || pending || amount < 1 || amount > remainingBudget}
-            className="btn-primary"
+            className="btn-primary shrink-0"
           >
             {pending ? "…" : "Parier"}
           </button>

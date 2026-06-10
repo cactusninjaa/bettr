@@ -75,13 +75,13 @@ export function AdminBar() {
   }
 
   return (
-    <div className="card p-6 flex flex-col gap-4">
-      <div className="flex items-baseline justify-between">
-        <div>
+    <div className="card p-4 sm:p-6 flex flex-col gap-3 sm:gap-4">
+      <div className="flex items-baseline justify-between gap-2">
+        <div className="min-w-0">
           <div className="card-section-title">Outils du POC</div>
-          <h2 className="text-lg font-bold mt-1">Pilotage admin</h2>
+          <h2 className="text-base sm:text-lg font-bold mt-1">Pilotage admin</h2>
         </div>
-        <span className="chip">Sandbox</span>
+        <span className="chip shrink-0">Sandbox</span>
       </div>
 
       <div className="flex gap-2 flex-wrap">
@@ -94,7 +94,7 @@ export function AdminBar() {
           className="btn-primary"
           style={{ background: "var(--success)" }}
         >
-          {loading === "WIN" ? "…" : "Faire gagner mes paris"}
+          {loading === "WIN" ? "…" : "Gagner mes paris"}
         </button>
         <button
           onClick={() => force("LOSE")}
@@ -102,7 +102,7 @@ export function AdminBar() {
           className="btn-primary"
           style={{ background: "var(--danger)" }}
         >
-          {loading === "LOSE" ? "…" : "Faire perdre mes paris"}
+          {loading === "LOSE" ? "…" : "Perdre mes paris"}
         </button>
       </div>
 
@@ -131,13 +131,13 @@ export function AdminBar() {
             return (
               <li
                 key={b.betId}
-                className={`flex items-center gap-3 px-4 py-3 rounded-2xl border ${
+                className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border ${
                   shown ? "animate-flash" : "opacity-0"
                 }`}
                 style={{ background: bg, borderColor: border }}
               >
                 <div
-                  className="w-9 h-9 rounded-full grid place-items-center text-base font-bold"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full grid place-items-center text-sm sm:text-base font-bold shrink-0"
                   style={{
                     background: shown ? "white" : "var(--surface-muted)",
                     color: shown ? color : "var(--muted)",
@@ -146,16 +146,16 @@ export function AdminBar() {
                   {shown ? (isWin ? "✓" : "✕") : "·"}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-semibold truncate">{b.matchLabel}</div>
-                  <div className="text-xs text-[var(--muted)] flex items-center gap-1">
-                    <span>{b.groupName} · choix {b.choice} ·</span>
+                  <div className="font-semibold truncate text-sm sm:text-base">{b.matchLabel}</div>
+                  <div className="text-[11px] sm:text-xs text-[var(--muted)] flex items-center gap-1 truncate">
+                    <span className="truncate">{b.groupName} · {b.choice} ·</span>
                     <Coin size={11} />
                     <span>{b.amount}</span>
                   </div>
                 </div>
                 {shown && (
                   <div
-                    className="font-mono font-bold text-lg flex items-center gap-1"
+                    className="font-mono font-bold text-base sm:text-lg flex items-center gap-1 shrink-0"
                     style={{ color }}
                   >
                     {isWin ? (

@@ -23,11 +23,11 @@ export default async function InvitePreviewPage({
 
   if (!inv) {
     return (
-      <div className="flex-1 grid place-items-center px-6 py-16">
-        <div className="card p-8 max-w-sm text-center flex flex-col gap-4 items-center">
+      <div className="flex-1 grid place-items-center px-4 sm:px-6 py-10 sm:py-16">
+        <div className="card p-6 sm:p-8 max-w-sm w-full text-center flex flex-col gap-4 items-center">
           <div className="text-5xl">🚫</div>
-          <h1 className="text-xl font-bold">Invitation introuvable</h1>
-          <p className="text-sm text-[var(--muted)]">
+          <h1 className="text-lg sm:text-xl font-bold">Invitation introuvable</h1>
+          <p className="text-xs sm:text-sm text-[var(--muted)]">
             Le lien est peut-être incorrect ou révoqué.
           </p>
           <Link href="/" className="btn-primary">Aller à l&apos;accueil</Link>
@@ -52,13 +52,15 @@ export default async function InvitePreviewPage({
   }
 
   return (
-    <div className="flex-1 grid place-items-center px-6 py-16">
-      <div className="card p-8 max-w-md w-full flex flex-col gap-6 items-center text-center">
-        <Coin size={56} />
-        <div>
+    <div className="flex-1 grid place-items-center px-4 sm:px-6 py-10 sm:py-16">
+      <div className="card p-6 sm:p-8 max-w-md w-full flex flex-col gap-5 sm:gap-6 items-center text-center">
+        <Coin size={48} />
+        <div className="min-w-0 w-full">
           <div className="card-section-title">Invitation</div>
-          <h1 className="text-2xl font-black tracking-tight mt-1">{inv.group.name}</h1>
-          <p className="text-sm text-[var(--muted)] mt-2">
+          <h1 className="text-xl sm:text-2xl font-black tracking-tight mt-1 truncate">
+            {inv.group.name}
+          </h1>
+          <p className="text-xs sm:text-sm text-[var(--muted)] mt-2">
             {inv.createdBy.name ?? "Un ami"} t&apos;invite à rejoindre ce groupe.
           </p>
           <p className="text-xs text-[var(--muted)] mt-1">

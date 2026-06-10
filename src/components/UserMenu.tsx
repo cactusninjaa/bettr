@@ -31,16 +31,16 @@ export function UserMenu({ name, image, signOutAction }: Props) {
       >
         {image ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={image} alt={name ?? ""} className="w-8 h-8 rounded-full" />
+          <img src={image} alt={name ?? ""} className="w-7 h-7 sm:w-8 sm:h-8 rounded-full" />
         ) : (
           <div
-            className="w-8 h-8 rounded-full grid place-items-center text-white font-bold text-sm"
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full grid place-items-center text-white font-bold text-xs sm:text-sm"
             style={{ background: "var(--primary)" }}
           >
             {initial}
           </div>
         )}
-        <span className="text-sm font-semibold pr-1 hidden sm:inline">
+        <span className="text-sm font-semibold pr-1 hidden md:inline truncate max-w-[10rem]">
           {name ?? "—"}
         </span>
       </button>

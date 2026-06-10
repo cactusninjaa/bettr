@@ -43,30 +43,36 @@ export default async function ProfilePage() {
   return (
     <>
       <Topbar />
-      <main className="max-w-6xl mx-auto px-6 py-10 flex flex-col gap-8">
-        <header className="flex items-center gap-4">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10 flex flex-col gap-6 sm:gap-8">
+        <header className="flex items-center gap-3 sm:gap-4">
           {user.image ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={user.image} alt={user.name ?? ""} className="w-16 h-16 rounded-full" />
+            <img
+              src={user.image}
+              alt={user.name ?? ""}
+              className="w-12 h-12 sm:w-16 sm:h-16 rounded-full shrink-0"
+            />
           ) : (
             <div
-              className="w-16 h-16 rounded-full grid place-items-center text-white text-2xl font-black"
+              className="w-12 h-12 sm:w-16 sm:h-16 rounded-full grid place-items-center text-white text-xl sm:text-2xl font-black shrink-0"
               style={{ background: "var(--primary)" }}
             >
               {user.name?.[0]?.toUpperCase() ?? "?"}
             </div>
           )}
-          <div>
+          <div className="min-w-0">
             <div className="card-section-title">Profil</div>
-            <h1 className="text-3xl font-black tracking-tight">{user.name ?? "—"}</h1>
-            <p className="text-sm text-[var(--muted)]">{user.email}</p>
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight truncate">
+              {user.name ?? "—"}
+            </h1>
+            <p className="text-xs sm:text-sm text-[var(--muted)] truncate">{user.email}</p>
           </div>
         </header>
 
-        <section className="card p-6 flex flex-col gap-4">
+        <section className="card p-4 sm:p-6 flex flex-col gap-4">
           <XpBar level={level} xpInLevel={xpInLevel} xpForNext={xpForNext} />
           <div className="divider" />
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
             <Stat label="Total XP" value={user.xp.toLocaleString()} icon={<Coin size={18} />} />
             <Stat
               label="Streak"
@@ -74,18 +80,22 @@ export default async function ProfilePage() {
               sub={`Record : ${user.longestStreak}`}
             />
             <Stat label="Paris" value={totalBets.toString()} sub={`${totalWins} gagnés`} />
-            <Stat label="Win rate" value={`${winRate}%`} sub={`Gros gain : ${biggest._max.pointsWon ?? 0}`} />
+            <Stat
+              label="Win rate"
+              value={`${winRate}%`}
+              sub={`Top : ${biggest._max.pointsWon ?? 0}`}
+            />
           </div>
         </section>
 
         <BadgeWall badges={badges} />
 
-        <section className="card p-6 flex items-center justify-between">
-          <div>
+        <section className="card p-4 sm:p-6 flex items-center justify-between gap-3">
+          <div className="min-w-0">
             <div className="card-section-title">Préférences</div>
-            <h2 className="text-lg font-bold mt-1">Sons & animations</h2>
-            <p className="text-sm text-[var(--muted)] mt-0.5">
-              Active ou coupe les effets sonores lors des animations.
+            <h2 className="text-base sm:text-lg font-bold mt-1">Sons & animations</h2>
+            <p className="text-xs sm:text-sm text-[var(--muted)] mt-0.5">
+              Active ou coupe les effets sonores.
             </p>
           </div>
           <SoundToggle initial={user.soundEnabled} />
@@ -97,15 +107,15 @@ export default async function ProfilePage() {
 
 function Stat({ label, value, sub, icon }: { label: string; value: string; sub?: string; icon?: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-1 p-3 rounded-2xl bg-[var(--surface-muted)]">
-      <span className="text-[10px] uppercase tracking-widest text-[var(--muted)] font-semibold">
+    <div className="flex flex-col gap-0.5 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-[var(--surface-muted)] min-w-0">
+      <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-[var(--muted)] font-semibold truncate">
         {label}
       </span>
-      <span className="font-mono font-black text-xl flex items-center gap-1.5">
+      <span className="font-mono font-black text-lg sm:text-xl flex items-center gap-1.5 truncate">
         {icon}
         {value}
       </span>
-      {sub && <span className="text-[10px] text-[var(--muted)]">{sub}</span>}
+      {sub && <span className="text-[10px] text-[var(--muted)] truncate">{sub}</span>}
     </div>
   );
 }

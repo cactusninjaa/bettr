@@ -16,12 +16,12 @@ export default async function LoginPage({
   const hasGithub = !!process.env.AUTH_GITHUB_ID;
 
   return (
-    <div className="flex-1 grid place-items-center px-6 py-16">
-      <div className="card w-full max-w-sm p-8 flex flex-col items-center gap-6">
-        <Coin size={64} />
+    <div className="flex-1 grid place-items-center px-4 sm:px-6 py-10 sm:py-16">
+      <div className="card w-full max-w-sm p-6 sm:p-8 flex flex-col items-center gap-5 sm:gap-6">
+        <Coin size={56} />
         <div className="text-center">
-          <h1 className="text-2xl font-black tracking-tight">Bienvenue sur Bettr</h1>
-          <p className="text-sm text-[var(--muted)] mt-1">
+          <h1 className="text-xl sm:text-2xl font-black tracking-tight">Bienvenue sur Bettr</h1>
+          <p className="text-xs sm:text-sm text-[var(--muted)] mt-1">
             Connecte-toi pour rejoindre tes groupes et placer tes pronostics.
           </p>
         </div>
