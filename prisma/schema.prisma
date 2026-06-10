@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+
+  xp             Int       @default(0)
+  level          Int       @default(1)
+  currentStreak  Int       @default(0)
+  longestStreak  Int       @default(0)
+  lastBetDate    DateTime?
+  soundEnabled   Boolean   @default(true)
+
+  accounts     Account[]
+  sessions     Session[]
+  memberships  GroupMember[]
+  bets         Bet[]
+  achievements UserAchievement[]
+  invitations  Invitation[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Group {
+  id          String        @id @default(cuid())
+  name        String
+  createdAt   DateTime      @default(now())
+  members     GroupMember[]
+  bets        Bet[]
+  invitations Invitation[]
+}
+
+model GroupMember {
+  id          String   @id @default(cuid())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  group       Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId     String
+  role        String   @default("MEMBER")
+  totalPoints Int      @default(0)
+  joinedAt    DateTime @default(now())
+
+  @@unique([userId, groupId])
+}
+
+model Invitation {
+  id          String    @id @default(cuid())
+  token       String    @unique
+  group       Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId     String
+  createdBy   User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById String
+  expiresAt   DateTime?
+  maxUses     Int?
+  uses        Int       @default(0)
+  createdAt   DateTime  @default(now())
+}
+
+model Match {
+  id           String   @id
+  sportKey     String
+  homeTeam     String
+  awayTeam     String
+  commenceTime DateTime
+  oddsHome     Float
+  oddsDraw     Float?
+  oddsAway     Float
+  result       String?
+  settled      Boolean  @default(false)
+  bets         Bet[]
+}
+
+model Bet {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String
+  match     Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  matchId   String
+  choice    String
+  amount    Int
+  pointsWon Int      @default(0)
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+
+  @@unique([userId, matchId, groupId])
+}
+
+model Achievement {
+  id            String            @id
+  name          String
+  description   String
+  icon          String
+  category      String
+  thresholdJSON String
+  users         UserAchievement[]
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  achievementId String
+  unlockedAt    DateTime    @default(now())
+
+  @@unique([userId, achievementId])
+}

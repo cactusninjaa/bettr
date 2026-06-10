@@ -1,65 +1,81 @@
-import Image from "next/image";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/db";
+import { remainingBudget, DAILY_BUDGET } from "@/lib/scoring";
+import { Topbar } from "@/components/Topbar";
+import { GroupList } from "@/components/GroupList";
+import { AdminBar } from "@/components/AdminBar";
+import { Coin } from "@/components/Coin";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+  if (!session?.user?.id) redirect("/login");
+
+  const [user, remaining, matchCount] = await Promise.all([
+    prisma.user.findUniqueOrThrow({
+      where: { id: session.user.id },
+      select: { name: true, currentStreak: true },
+    }),
+    remainingBudget(session.user.id),
+    prisma.match.count({
+      where: {
+        commenceTime: { gte: new Date(new Date().setHours(0, 0, 0, 0)) },
+        settled: false,
+      },
+    }),
+  ]);
+
+  const firstName = user.name?.split(" ")[0] ?? "ami";
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <>
+      <Topbar />
+      <main className="max-w-6xl mx-auto px-6 py-10 flex flex-col gap-8">
+        <section
+          className="card p-8 flex flex-col md:flex-row gap-6 md:items-center justify-between"
+          style={{ background: "var(--primary)", color: "white", border: "none" }}
+        >
+          <div className="flex-1">
+            <div className="text-xs font-semibold uppercase tracking-widest opacity-80">
+              Bonjour {firstName}
+            </div>
+            <h2 className="text-2xl md:text-3xl font-black mt-1 leading-tight">
+              {matchCount > 0
+                ? `${matchCount} match${matchCount > 1 ? "es" : ""} t'attendent.`
+                : "Aucun match aujourd'hui."}
+              <br />
+              <span className="opacity-80">
+                {remaining > 0
+                  ? `Il te reste ${remaining} pts à miser.`
+                  : "Tu as épuisé ton budget du jour."}
+              </span>
+            </h2>
+          </div>
+          <div className="flex gap-3">
+            <div className="px-5 py-4 rounded-2xl" style={{ background: "var(--primary-dark)" }}>
+              <div className="text-[10px] uppercase tracking-wider opacity-80">Budget restant</div>
+              <div className="font-mono font-black text-2xl flex items-center gap-1.5 mt-0.5">
+                <Coin size={20} />
+                {remaining}
+              </div>
+              <div className="text-[10px] opacity-70 mt-0.5">/ {DAILY_BUDGET}</div>
+            </div>
+            <div className="px-5 py-4 rounded-2xl" style={{ background: "var(--primary-dark)" }}>
+              <div className="text-[10px] uppercase tracking-wider opacity-80">Streak</div>
+              <div className="font-mono font-black text-2xl mt-0.5">{user.currentStreak} 🔥</div>
+              <div className="text-[10px] opacity-70 mt-0.5">jours</div>
+            </div>
+          </div>
+        </section>
+
+        <AdminBar />
+
+        <GroupList />
+
+        <footer className="text-center text-xs text-[var(--muted)] py-4">
+          Argent fictif · POC interne
+        </footer>
       </main>
-    </div>
+    </>
   );
 }
